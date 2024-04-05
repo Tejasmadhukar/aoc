@@ -1,15 +1,5 @@
+use crate::common::read_lines;
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::{self, BufRead};
-use std::path::Path;
-
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(filename)?;
-    Ok(io::BufReader::new(file).lines())
-}
 
 fn process_string(s: &String, result: &mut u32, digits_map: &HashMap<&str, u32>) {
     let mut first_digit: Option<u32> = None;
