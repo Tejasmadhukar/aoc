@@ -1,7 +1,7 @@
-pub mod common;
-pub mod q1;
+pub mod question;
+pub mod solution;
 
 fn main() {
     println!("Solving Advent of code");
-    q1::solve_q1()
+    solution::q1::solve_q1();
 }
