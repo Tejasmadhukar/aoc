@@ -92,9 +92,7 @@ fn search_x_mas(grid: &Vec<Vec<char>>, r: i32, c: i32) -> i32 {
         points.push(point);
     }
 
-    if (points[0] == points[1] && points[2] == points[3])
-        || (points[0] == points[3] && points[1] == points[2])
-    {
+    if points[0] != points[2] && points[1] != points[3] {
         return 1;
     }
 
