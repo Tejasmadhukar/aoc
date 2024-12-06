@@ -76,7 +76,7 @@ fn search_x_mas(grid: &Vec<Vec<char>>, r: i32, c: i32) -> i32 {
 
     for dir in directions {
         let cx = r + dir.0;
-        let cy = r + dir.1;
+        let cy = c + dir.1;
 
         if !(0..grid.len()).contains(&(cx as usize)) || !(0..grid[0].len()).contains(&(cy as usize))
         {
