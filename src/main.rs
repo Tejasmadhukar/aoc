@@ -79,5 +79,5 @@ fn main() {
     // let q4 = Q4 {};
     // println!("{}", q4.solve_part_two(None));
     let q5 = Q5 {};
-    println!("{}", q5.solve_part_one(None));
+    println!("{}", q5.solve_part_two(None));
 }
