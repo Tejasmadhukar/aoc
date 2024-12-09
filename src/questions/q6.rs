@@ -62,6 +62,19 @@ impl Game {
         let c = directions.get(self.guard_direction as usize).unwrap();
         self.guard_position = (self.guard_position.0 + c.0, self.guard_position.1 + c.1);
     }
+    fn add_obstacles(&mut self, i: i32, j: i32) {
+        self.obstacles.insert((i, j));
+    }
+    fn remove_obstacles(&mut self, i: i32, j: i32) {
+        self.obstacles.remove(&(i, j));
+    }
+    fn get_position(&self) -> (i32, i32, i32) {
+        (
+            self.guard_position.0,
+            self.guard_position.1,
+            (self.guard_direction as i32),
+        )
+    }
 }
 
 impl Solution for Q6 {
@@ -115,5 +128,76 @@ impl Solution for Q6 {
         }
 
         unique_position.len().try_into().unwrap()
+    }
+
+    fn solve_part_two(&self, _path: Option<&str>) -> i32 {
+        let mut input = self.get_input();
+        match _path {
+            Some(path) => input = self.get_custom_input(path),
+            None => {}
+        }
+
+        let m = input.lines().count() - 1;
+        let n = input.lines().nth(0).unwrap().len() - 1;
+        let mut obstacles: HashSet<(i32, i32)> = HashSet::new();
+        let mut gp: (i32, i32) = (-1, -1);
+
+        for (j, line) in input.lines().enumerate() {
+            for (i, c) in line.chars().enumerate() {
+                if c == '#' {
+                    obstacles.insert((i.try_into().unwrap(), j.try_into().unwrap()));
+                }
+                if c == '^' {
+                    gp = (i.try_into().unwrap(), j.try_into().unwrap());
+                }
+            }
+        }
+
+        let mut game = Game {
+            game_limits: (m.try_into().unwrap(), n.try_into().unwrap()),
+            obstacles,
+            guard_position: gp,
+            guard_direction: Direction::Up,
+        };
+
+        let mut ans = 0;
+
+        for (j, line) in input.lines().enumerate() {
+            for (i, c) in line.chars().enumerate() {
+                if c == '#' || c == '^' {
+                    continue;
+                }
+
+                game.add_obstacles(i.try_into().unwrap(), j.try_into().unwrap());
+
+                let mut unique_position: HashSet<(i32, i32, i32)> = HashSet::new();
+
+                game.guard_position = gp;
+                game.guard_direction = Direction::Up;
+
+                loop {
+                    if game.check_out_of_bounds() || unique_position.contains(&game.get_position())
+                    {
+                        break;
+                    }
+
+                    if game.is_obstacle_ahead() {
+                        game.change_direction();
+                        continue;
+                    }
+
+                    unique_position.insert(game.get_position());
+                    game.move_ahead();
+                }
+
+                if unique_position.contains(&game.get_position()) {
+                    ans += 1;
+                }
+
+                game.remove_obstacles(i.try_into().unwrap(), j.try_into().unwrap());
+            }
+        }
+
+        ans
     }
 }
