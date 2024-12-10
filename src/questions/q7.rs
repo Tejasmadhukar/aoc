@@ -39,6 +39,7 @@ impl Q7 {
 
         ans
     }
+    #[allow(dead_code)]
     pub fn custom_solve_part_two(&self, path: Option<&str>) -> u64 {
         let mut input = self.get_input();
         match path {
