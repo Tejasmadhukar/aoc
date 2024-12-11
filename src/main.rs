@@ -89,5 +89,5 @@ fn main() {
     // let q9 = Q9 {};
     // println!("{}", q9.custom_part_two(None));
     let q10 = Q10 {};
-    println!("{}", q10.solve_part_one(None));
+    println!("{}", q10.solve_part_two(None));
 }

@@ -40,6 +40,55 @@ impl Solution for Q10 {
 
         ans as i32
     }
+    fn solve_part_two(&self, _path: Option<&str>) -> i32 {
+        let mut input = self.get_input();
+        match _path {
+            Some(path) => input = self.get_custom_input(path),
+            None => {}
+        }
+
+        let grid: Vec<Vec<u8>> = input
+            .lines()
+            .map(|line| {
+                line.chars()
+                    .map(|x| x.to_digit(10).unwrap() as u8)
+                    .collect()
+            })
+            .collect();
+
+        let mut ans = 0;
+
+        for i in 0..grid.len() {
+            for j in 0..grid.len() {
+                if grid[i][j] != 0 {
+                    continue;
+                }
+
+                solve_two(&grid, i, j, &mut ans);
+            }
+        }
+
+        ans as i32
+    }
+}
+
+fn solve_two(grid: &Vec<Vec<u8>>, x: usize, y: usize, seen: &mut u32) {
+    let dirs: Vec<(isize, isize)> = vec![(-1, 0), (0, 1), (1, 0), (0, -1)];
+
+    if grid[x][y] == 9 {
+        *seen += 1;
+    }
+
+    for dir in dirs {
+        let nx = x as isize + dir.0;
+        let ny = y as isize + dir.1;
+
+        if (0..grid[0].len()).contains(&(nx as usize)) && (0..grid.len()).contains(&(ny as usize)) {
+            if grid[nx as usize][ny as usize] == grid[x][y] + 1 {
+                solve_two(grid, nx as usize, ny as usize, seen);
+            }
+        }
+    }
 }
 
 fn solve_one(grid: &Vec<Vec<u8>>, x: usize, y: usize, seen: &mut HashSet<(usize, usize)>) {
