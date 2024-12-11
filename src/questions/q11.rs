@@ -1,4 +1,5 @@
 use crate::solution::Solution;
+use memoize::memoize;
 
 pub struct Q11 {}
 
@@ -17,20 +18,6 @@ impl Solution for Q11 {
             .split_whitespace()
             .map(|x| x.parse::<u64>().unwrap())
             .collect();
-
-        let count_digits = |num: u64| -> u32 {
-            if num == 0 {
-                return 1;
-            }
-            (num as f64).log10().floor() as u32 + 1
-        };
-
-        let split_digits = |num: u64| -> (u64, u64) {
-            let divisor = 10u64.pow(count_digits(num) / 2);
-            let left = num / divisor;
-            let right = num % divisor;
-            (left, right)
-        };
 
         let blink = |stones: &mut Vec<u64>| {
             let mut idx = 0;
@@ -62,4 +49,57 @@ impl Solution for Q11 {
 
         stones.len() as i32
     }
+}
+
+impl Q11 {
+    #[allow(dead_code)]
+    pub fn custom_part_two(&self, _path: Option<&str>) -> u64 {
+        let mut input = self.get_input();
+        match _path {
+            Some(path) => input = self.get_custom_input(path),
+            None => {}
+        }
+
+        let stones: Vec<u64> = input
+            .split_whitespace()
+            .map(|x| x.parse::<u64>().unwrap())
+            .collect();
+
+        stones.iter().map(|x| solve(*x, 75)).sum()
+    }
+}
+
+fn count_digits(num: u64) -> u32 {
+    if num == 0 {
+        return 1;
+    }
+    (num as f64).log10().floor() as u32 + 1
+}
+
+fn split_digits(num: u64) -> (u64, u64) {
+    let divisor = 10u64.pow(count_digits(num) / 2);
+    let left = num / divisor;
+    let right = num % divisor;
+    (left, right)
+}
+
+#[allow(dead_code)]
+#[memoize]
+fn solve(num: u64, steps: u8) -> u64 {
+    if steps == 0 {
+        return 1;
+    }
+    let mut result = 0;
+
+    if num == 0 {
+        result = solve(1, steps - 1);
+    } else if count_digits(num) % 2 == 0 {
+        let new = split_digits(num);
+        result += solve(new.0, steps - 1);
+        result += solve(new.1, steps - 1);
+    } else {
+        result = solve(num * 2024, steps - 1);
+    }
+
+    result
 }
