@@ -1,7 +1,7 @@
 mod questions;
 mod solution;
 use clap::{Parser, Subcommand};
-use questions::q13::Q13;
+use questions::q14::Q14;
 use solution::Solution;
 use std::{ops::RangeInclusive, usize};
 
@@ -92,6 +92,8 @@ fn main() {
     // println!("{}", q11.custom_part_two(None));
     // let q12 = Q12 {};
     // println!("{}", q12.solve_part_two(None));
-    let q13 = Q13 {};
-    println!("{}", q13.custom_part_two(None));
+    // let q13 = Q13 {};
+    // println!("{}", q13.custom_part_two(None));
+    let q14 = Q14 {};
+    println!("{}", q14.solve_part_one(None));
 }
